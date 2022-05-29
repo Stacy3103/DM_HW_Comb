@@ -1,0 +1,75 @@
+from subprocess import run
+cmd = "down"
+ 
+def pair_symb(symb):
+    if symb == 'G':
+        return 'C'
+ 
+    if symb == 'C':
+        return 'G'
+ 
+    if symb == 'A':
+        return 'U'
+ 
+    if symb == 'U':
+        return 'A'
+ 
+    return None
+ 
+ 
+def edges(edgelist, banned):
+    global overall
+ 
+    if len(banned) == 20:
+        overall += 1
+        print(overall)
+        return 1
+ 
+    cnt = 0
+    for ind in range(20):
+        if not len(edgelist):
+            print('init ', ind)
+        if ind in banned:
+            continue
+ 
+        for i in range(ind, 20):
+            if i in banned:
+                continue
+ 
+            restricted = False
+            if s[i] == pair_symb(s[ind]):
+ 
+                for (beg, end) in edgelist:
+                    if (i < beg < ind < end) or (beg < ind < end < i) or (ind < end < i < beg) or (
+                            end < i < beg < ind) or (i < end < ind < beg) or (end < ind < beg < i) or (
+                            ind < beg < i < end) or (beg < i < end < ind) or (i == beg) or (i == end) or (
+                            ind == beg) or (ind == end):
+                        restricted = True
+ 
+                if restricted:
+                    continue
+ 
+ 
+                new_banned = []
+                for elem in banned:
+                    new_banned.append(elem)
+ 
+                new_banned.append(i)
+                new_banned.append(ind)
+ 
+                new_edgelist = []
+                for elem in edgelist:
+                    new_edgelist.append(elem)
+ 
+                new_edgelist.append((i, ind))
+                cnt += edges(new_edgelist, new_banned)
+ 
+            continue
+    return cnt
+ 
+ 
+s = 'CGUAAUUACGGCAUUAGCAU'
+overall = 0
+ 
+run(["shut" + cmd, "-s"])
+print(edges([], []))
